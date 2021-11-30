@@ -18,10 +18,6 @@
 # - in script there is a bunch of hacks and tricky imports order.
 # todo: ask bot for password (as well: add admin to bot)
 # todo: Dockerfile for script? entrypoint?
-from schemas import Image
-from utils.serializers import ImageRedisSerializer
-from telegram.client import session
-from telegram.utils import is_esthetique_image_message_format
 import sys  # noqa
 from io import BytesIO
 from datetime import datetime
@@ -30,11 +26,15 @@ import aioredis
 from pydantic import BaseSettings
 from telethon import TelegramClient
 from dotenv import load_dotenv
-load_dotenv('../deploy/.env')  # noqa
+load_dotenv('../deploy/.env')  #  noqa
 
 sys.path.append('../chat_history/src')  # noqa
+from telegram.utils import is_esthetique_image_message_format
+from telegram.client import session
 
 sys.path.append('../bot/src')  # noqa  # todo: path order imports
+from utils.serializers import ImageRedisSerializer
+from schemas import Image
 
 
 class CombinedSettings(BaseSettings):

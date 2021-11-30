@@ -1,6 +1,6 @@
 # esthetique-telegram-bot
-A telegram chatbot that periodically gives **statistics** on posted via **tg @like bot messages**, i.e. esthetique posts, 
-and can warn you about **image duplicating**.
+The telegram chatbot that periodically gives **statistics** on posted via **tg @like bot messages**, i.e. esthetique posts, 
+and can warn you about **image duplicating** as well.
 
 ![plot](./docs/schema.jpg)
 
@@ -20,7 +20,7 @@ and can warn you about **image duplicating**.
 ## Definition
 - tg-@like bot message/esthetique post: message with photo that sent with help of tg-@like bot 
 with 5 buttons: 😡 / 😔 / 😐 / ☺️ / 😍 to the chat
-- statistics: bot shows images with [best score](bot/src/utils/calculations.py) in ascending order
+- statistics: bot shows esthetique posts with [best score](bot/src/utils/calculations.py) in ascending order
 
 <details>
   <summary>Esthetique example</summary>
@@ -38,47 +38,46 @@ In realtime [aiogram](https://github.com/aiogram/aiogram) bot handle esthetique 
 ## Start
 
 ### Briefly
-Before I suppose that both bots: telethon ([chat_history](chat_history)) bot and aiogram ([bot](bot)) added to chat. 
+Before the start, I suppose that both bots: telethon ([chat_history](chat_history)) bot and aiogram ([bot](bot)) added to the chat. 
 
-There is [docker-compose file](deploy/docker-compose.prod.yml) presented, 
+Next to be mentioned, there is [docker-compose file](deploy/docker-compose.prod.yml) presented, 
 thus, to run:
 - go to [deploy/](deploy) and prepare your `.env`  according to [deploy/.env.example](deploy/.env.example),
-than to start compose in daemon mode:
+then you are able to gracefully start compose in daemon mode:
 ```bash
 docker-compose -f docker-compose.prod.yml up -d
 ```
-- for telethon you should login with pin verified, for this purpose I left [script](./chat_history/src/scripts/init_session.py), So, e.g.:
+- for telethon you should login with pin verified, for this purpose I left [script](./chat_history/src/scripts/init_session.py), So, complete login with script, e.g. command:
 ```bash
 docker exec -ti deploy_chat_history_1 sh -c "python scripts/init_session.py" 
 ```
-and complete login.
 
-> todo: make this login as entrypoint with bot forward message with  verification to admin
+> todo: make this login as entrypoint with forwarding verification message via bot to admin
 
 ### With Cache Warming Up 
-When you want to populate image hashes with already existing chat and its history 
+When you want to populate image hashes with already existed chat and its history 
 I left a [not good script](scripts/import_previos_images_hashes.py) for 1 run. 
-The script is also may replace [script](./chat_history/src/scripts/init_session.py) mentioned earlier coz it creates session for telethon in redis as well.
+The script also replaces [script](./chat_history/src/scripts/init_session.py) mentioned earlier, coz it creates session for telethon in redis as well.
 
-Before to continue I suppose:
+Before continuing, I suppose:
 - Chat already exists. To be more precisely, chat is in supergroup status
 - Chat history for new members is visible
-- telethon bot account and aiogram bot account added to chat
-- requirements for both installed in python3.9
-- redis has port allocated to host, `deploy/.env` has values according, i.e. `REDIS_HOST=localhost`
+- telethon bot account added to chat
+- requirements for both installed in you python3.9 venv or even host
+- redis that stack uses has port allocated to host, `deploy/.env` has values according, i.e. `REDIS_HOST=localhost`
 
 To start import run from [script](script) directory:
 ```bash
 python import_previous_images_hashes.py
 ```
 
-> todo: too complicated instruction, instead prepare one run dockerfile instead of script? 
+> todo: too complicated instruction, instead prepare one run dockerfile? 
 > or even make use for chat_history image api?
 
 ## Settings
 Settings that may be tunes should be located in `deploy/.env` and prepared as in [deploy/.env.example](deploy/.env.example).
 
-> To find chat_id fast: https://api.telegram.org/bot<UR_BOT_TOKEN>/getUpdates
+> **Tip** to find chat_id fast: https://api.telegram.org/bot<UR_BOT_TOKEN>/getUpdates
 
 ## Develop
 ### Develop docker-compose
@@ -130,7 +129,8 @@ Settings that may be tunes should be located in `deploy/.env` and prepared as in
 
 
 ### Contribution
-- pep8, pls [120 symbols per line]
+- pep8 [120 symbols per line], pls
+- feature branch, e.g. feature/only_members_vote
 
 ## TODO
 - [ ] github compose deploy
