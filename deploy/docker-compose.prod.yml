@@ -16,7 +16,7 @@ services:
     <<: *prod-service
     build:
       context: ../chat_history
-      dockerfile: .
+      dockerfile: ./Dockerfile
     env_file:
       - .env
 
@@ -24,7 +24,7 @@ services:
     <<: *prod-app
     build:
       context: ../bot
-      dockerfile: .
+      dockerfile: ./Dockerfile
 
   redis:
     <<: *prod-service
