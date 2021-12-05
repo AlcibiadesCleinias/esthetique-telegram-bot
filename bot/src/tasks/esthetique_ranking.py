@@ -11,7 +11,6 @@ from config.settings import settings
 from utils.calculations import calculate_weight
 from utils.cron import CronTaskBase
 from utils.time import now_utc
-import pytz  # todo
 
 logger = get_app_logger()
 
@@ -50,12 +49,9 @@ async def _show_best_esthetiques(n):
     i.e. show in replays esthetique formatted messages with best stats.
     """
 
-    end = now_utc()
+    end = now_utc().replace(second=0, microsecond=0)
     cron = croniter(settings.TG_BOT_ESTHETIQUE_STATS_CRON, start_time=end, max_years_between_matches=1)
     start = cron.get_prev(datetime)
-
-    start = datetime(2021, 11, 20, tzinfo=pytz.utc)  # todo: remove debug
-    end = datetime(2021, 11, 28, tzinfo=pytz.utc)
 
     chat_history = TgChatHistoryClient(
         chat_id=settings.TG_BOT_ESTHETIQUE_CHAT,
@@ -63,6 +59,10 @@ async def _show_best_esthetiques(n):
     )
 
     stats = await chat_history.get_esthetique_stats(start=start, end=end)
+    if not stats.likes_statistics:
+        logger.info(f"No statistic info comes for period: {start} - {end}")
+        return
+
     sorted_indexes = np.argsort([calculate_weight(stat) for stat in stats.likes_statistics])
     sorted_indexes_first_n = sorted_indexes[len(sorted_indexes) - n:]
 
