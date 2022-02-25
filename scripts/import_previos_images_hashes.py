@@ -71,18 +71,26 @@ async def import_all_image_hashes_from_chat():
     async for message in messages:
 
         if is_esthetique_image_message_format(message):
-            f = await message.download_media(file=bytes)
-            f_bytesio = BytesIO(f)
+            try:
+                f = await message.download_media(file=bytes)
+                f_bytesio = BytesIO(f)
 
-            image = Image.construct(message_id=message.id, file=f_bytesio)  # hack with image
-            serializer = ImageRedisSerializer(redis=redis, image=image)
+                image = Image.construct(message_id=message.id, file=f_bytesio)  # hack with image
+                serializer = ImageRedisSerializer(redis=redis, image=image)
 
-            duplicate = await serializer.get_duplicate()
-            if not duplicate:
-                print(f'Photo from {message.id = } saved.')
-                await serializer.save()
-            else:
-                print(f'{message.id = } has {duplicate = }. Pass it.')
+                duplicate = await serializer.get_duplicate()
+                if not duplicate:
+                    print(f'Photo from {message.id = } saved.')
+                    await serializer.save()
+                else:
+                    print(f'{message.id = } has {duplicate = }. Pass it.')
+                    await client.send_message('me', 'original and then duplicate...')
+                    await client.forward_messages('me', int(duplicate), from_peer=entity)
+                    await client.forward_messages('me', int(message.id), from_peer=entity)
+            except Exception as e:
+                print(f'Could not hash for {message.id = } with {e = }. Pass it...')
+                await client.send_message('me', 'Could not hashing for below:')
+                await client.forward_messages('me', int(message.id), from_peer=entity)
 
 
 def main():

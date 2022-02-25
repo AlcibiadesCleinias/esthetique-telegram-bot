@@ -39,6 +39,7 @@ In realtime [aiogram](https://github.com/aiogram/aiogram) bot handle esthetique 
 
 ### Briefly
 Before the start, I suppose that both bots: telethon ([chat_history](chat_history)) bot and aiogram ([bot](bot)) added to the chat. 
+For aiogram bot you have to disable privacy mode, i.e. `@BotFather bot >> Bot Settings >> Group Privacy >> Turn off`   
 
 Next to be mentioned, there is [docker-compose file](deploy/docker-compose.prod.yml) presented, 
 thus, to run:
@@ -65,6 +66,7 @@ Before continuing, I suppose:
 - telethon bot account added to chat
 - requirements for both installed in you python3.9 venv or even host
 - redis that stack uses has port allocated to host, `deploy/.env` has values according, i.e. `REDIS_HOST=localhost`
+- privacy mode for bot is disabled
 
 To start import run from [script](script) directory:
 ```bash
@@ -138,6 +140,7 @@ Settings that may be tunes should be located in `deploy/.env` and prepared as in
 - [ ] in-code todos about entrypoint
 - [ ] in-code todos about chat_history app (telethon ) verification asking
 - [ ] auto title image change 
+- [ ] telegram logger: send error messages to admins 
 
 ## Acknowledgement
 - Bot structure is a bit according to https://github.com/Arwichok/asyncbot
