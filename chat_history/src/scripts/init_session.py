@@ -1,5 +1,6 @@
 """Script helps you to craete session in redis once.
-todo: make telethon ask bot for pin in admin chat.
+TODO: use callback with bot texting, e.g. await client.start(phone=phone,  code_callback=code_callback)
+e.g. make telethon ask bot for pin in admin chat.
 """
 from telethon import TelegramClient
 

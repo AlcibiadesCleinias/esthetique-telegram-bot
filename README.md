@@ -19,7 +19,7 @@ and can warn you about **image duplicating** as well.
 
 ## Definition
 - tg-@like bot message/esthetique post: message with photo that sent with help of tg-@like bot 
-with 5 buttons: 😡 / 😔 / 😐 / ☺️ / 😍 to the chat
+with 5 buttons: 😡 / 😔 / 😐 / ☺️ / 😍 to the chat (10.08.22 😊 added as well)
 - statistics: bot shows esthetique posts with [best score](bot/src/utils/calculations.py) in ascending order
 
 <details>
@@ -48,12 +48,18 @@ then you are able to gracefully start compose in daemon mode:
 ```bash
 docker-compose -f docker-compose.prod.yml up -d
 ```
-- for telethon you should login with pin verified, for this purpose I left [script](./chat_history/src/scripts/init_session.py), So, complete login with script, e.g. command:
+- for telethon you should login with pin verified, for this purpose I left [script](./chat_history/src/scripts/init_session.py), 
+So, complete login with script and telegram session will be saved into redis, e.g. command:
 ```bash
-docker exec -ti deploy_chat_history_1 sh -c "python scripts/init_session.py" 
+docker exec -ti deploy_chat_history_1 sh -c "PYTHONPATH=. python scripts/init_session.py" 
 ```
 
-> todo: make this login as entrypoint with forwarding verification message via bot to admin
+- or run the command above initially with tmp container from deploy/ dir.
+```bash
+docker-compose run chat_history sh -c "PYTHONPATH=. python scripts/init_session.py"
+```
+
+> TODO: make this login as entrypoint with forwarding verification message via bot to admin
 
 ### With Cache Warming Up 
 When you want to populate image hashes with already existed chat and its history 
@@ -141,6 +147,8 @@ Settings that may be tunes should be located in `deploy/.env` and prepared as in
 - [ ] in-code todos about chat_history app (telethon ) verification asking
 - [ ] auto title image change 
 - [ ] telegram logger: send error messages to admins 
+- [ ] it is possible to hack statistic results via providing similar emojis but the ones not from a template and allowed. 
+Thus, by providing other emojis hacker could manipulate what he wants to be counted in final result.
 
 ## Acknowledgement
 - Bot structure is a bit according to https://github.com/Arwichok/asyncbot

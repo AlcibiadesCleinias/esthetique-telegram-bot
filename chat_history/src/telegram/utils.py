@@ -35,6 +35,7 @@ async def get_like_statistics_from_tg_message(message: Message) -> dict:
         u'😔': 'like_1',
         u'😐': 'like0',
         u'☺️': 'like1',
+        u'😊': 'like1',
         u'😍': 'like2',
     }
     like_stats = {like_type: 0 for like_type in emoji_like.values()}
