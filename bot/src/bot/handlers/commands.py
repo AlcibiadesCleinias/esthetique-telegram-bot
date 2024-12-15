@@ -1,15 +1,10 @@
-import asyncio
+
 import logging
-import random
 
 from aiogram import types
 
-from bot.misc import dp, redis
-from bot.utils import get_photo_from_message
+from bot.misc import dp
 from config.settings import settings
-from schemas import Image
-from utils.serializers import ImageRedisSerializer
-from bot.misc import bot
 
 logger = logging.getLogger(__name__)
 

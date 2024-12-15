@@ -53,7 +53,7 @@ async def _duplicate_warn(chat_id: int, sender_id: int, sender_message_id: int, 
     is_esthetique_format=True,
 )
 async def handle_esthetique_photo(message: types.Message):
-    logging.info(message.photo)
+    logging.info(f'[handle_esthetique_photo] {message = }')
 
     image_file = await get_photo_from_message(message)
     image = Image(message_id=message.message_id, file=image_file)

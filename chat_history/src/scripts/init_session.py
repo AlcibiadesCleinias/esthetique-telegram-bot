@@ -7,15 +7,15 @@ from telethon import TelegramClient
 from config.settings import settings
 from telegram.client import session
 
-client = TelegramClient(session, settings.TG_API_ID, settings.TG_API_HASH)
-
-
-async def get_me():
-    me = await client.get_me()
-    print(f'U logged as {me.username}')
-
-
 def main():
+    client = TelegramClient(session, settings.TG_API_ID, settings.TG_API_HASH)
+
+    async def get_me():
+        me = await client.get_me()
+        print(f'U logged as {me.username}')
+        dialogs = await client.get_dialogs(limit=5)
+        print(f'Loaded {dialogs = }')
+
     with client:
         client.loop.run_until_complete(get_me())
 
