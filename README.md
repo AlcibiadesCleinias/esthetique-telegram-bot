@@ -35,6 +35,8 @@ already collected message, thus, [telethon](https://github.com/LonamiWebs/Teleth
 - image duplicating: I use [ImageHash](https://pypi.org/project/ImageHash/) lib as it is in [bot](./bot/src/utils/serializers.py). 
 In realtime [aiogram](https://github.com/aiogram/aiogram) bot handle esthetique posts and duplication warnings.
 
+> infra feature: it uses redis as kinda persistent storage with 1 min periodic snapshotting
+
 ## Start
 
 ### Briefly
@@ -85,7 +87,7 @@ python import_previous_images_hashes.py
 ## Settings
 Settings that may be tunes should be located in `deploy/.env` and prepared as in [deploy/.env.example](deploy/.env.example).
 
-> **Tip** to find chat_id fast: https://api.telegram.org/bot<UR_BOT_TOKEN>/getUpdates
+> **Tip** to find chat_id fast: type smth into chat and then curl to `https://api.telegram.org/bot<UR_BOT_TOKEN>/getUpdates`
 
 ## Develop
 ### Develop docker-compose
