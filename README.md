@@ -16,6 +16,7 @@ and can warn you about **image duplicating** as well.
    * [Contribution](#contribution)
 * [TODO](#todo)
 * [Acknowledgement](#acknowledgement)
+* [Troubleshooting](#troubleshooting)
 
 ## Definition
 - tg-@like bot message/esthetique post: message with photo that sent with help of tg-@like bot 
@@ -133,7 +134,7 @@ Settings that may be tunes should be located in `deploy/.env` and prepared as in
           - redis_data_dev:/data
         ports:
           - 6379:6379
-      ```
+    ```
 
 </details>
 
@@ -155,3 +156,8 @@ Thus, by providing other emojis hacker could manipulate what he wants to be coun
 ## Acknowledgement
 - Bot structure is a bit according to https://github.com/Arwichok/asyncbot
 - ImageHash lib used coz of "recent" usage by @sergmiller in prev. project
+
+## Troubleshooting
+### Message ids for **chat_history** and for **bot** are different
+Possible that means that chat is not in supergroup status, so, chat history is still disabled. You need to enable chat history for your chat. 
+Also Note this: https://stackoverflow.com/a/75689058
