@@ -1,7 +1,7 @@
 import asyncio
 import logging
 
-import aioredis
+import redis.asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.utils.executor import Executor
 
@@ -13,7 +13,7 @@ logging.basicConfig(
 )
 
 # in code below it uses asyncio lock inside when creates connection pool
-redis = aioredis.from_url(f'redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}', db=0)
+redis = redis.asyncio.from_url(f'redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}', db=0)
 # storage = RedisStorage2(**REDIS_SETTINGS) if REDIS_SETTINGS else MemoryStorage()
 loop = asyncio.get_event_loop()
 

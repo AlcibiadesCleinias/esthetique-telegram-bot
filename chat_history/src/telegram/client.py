@@ -1,8 +1,7 @@
 from telethon import TelegramClient
 from telegram.redis_session import RedisStringSession
 from config.settings import settings
-import redis  # todo: to async
-
+import redis
 
 redis_connector = redis.Redis(  # todo: relocate
     host=settings.REDIS_HOST,

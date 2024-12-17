@@ -1,7 +1,7 @@
 from typing import Optional
 from io import BytesIO
 
-from aioredis import Redis
+from redis.asyncio import Redis
 from asyncio import Lock
 from PIL import Image as PILImage
 import imagehash

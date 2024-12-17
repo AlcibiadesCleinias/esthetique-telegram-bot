@@ -1,4 +1,4 @@
-aioredis==2.0.0
+redis==5.2.1
 aiogram==2.16
 imagehash==4.2.1
 pillow==8.3.1
