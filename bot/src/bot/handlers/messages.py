@@ -3,6 +3,7 @@ import logging
 import random
 
 from aiogram import types
+from aiogram import exceptions as aiogram_exceptions
 
 from bot.misc import dp, redis
 from bot.utils import get_photo_from_message
@@ -18,8 +19,8 @@ async def _duplicate_warn(chat_id: int, sender_id: int, sender_message_id: int, 
     async def _bro():
         await bot.send_message(
             chat_id=chat_id,
-            text=f'Hey, {sender_id}, bro, seems you duplicated this one',
             reply_to_message_id=original_message_id,
+            text=f'Hey, {sender_id}, bro, seems you duplicated this one',
         )
 
     async def _stickerochek():
@@ -40,7 +41,7 @@ async def _duplicate_warn(chat_id: int, sender_id: int, sender_message_id: int, 
         )
         await bot.send_message(
             chat_id=chat_id,
-            text='.',
+            text='here is an original message.',
             reply_to_message_id=original_message_id,
         )
 
@@ -53,11 +54,13 @@ async def _duplicate_warn(chat_id: int, sender_id: int, sender_message_id: int, 
     is_esthetique_format=True,
 )
 async def handle_esthetique_photo(message: types.Message):
-    logging.info(message.photo)
+    logging.info(f'[handle_esthetique_photo] {message = }')
 
     image_file = await get_photo_from_message(message)
     image = Image(message_id=message.message_id, file=image_file)
     image_serialier = ImageRedisSerializer(image=image, redis=redis)
+
+    message_chat_id = message.chat.id
 
     async with asyncio.Lock():
         duplicated_message_id = await image_serialier.get_duplicate()
@@ -69,9 +72,19 @@ async def handle_esthetique_photo(message: types.Message):
             f'{message.from_user} sent duplicate with {message.message_id} '
             f'of {duplicated_message_id}. Warn him...'
         )
-        await _duplicate_warn(
-            message.chat.id,
-            message.from_user.mention,
-            message.message_id,
-            duplicated_message_id,
-        )
+        try: 
+            await _duplicate_warn(
+                message_chat_id,
+                message.from_user.mention,
+                message.message_id,
+                duplicated_message_id,
+            )
+        except aiogram_exceptions.BadRequest as e:
+            if str(e).startswith("Message to be replied not found"):
+                await bot.send_message(
+                    chat_id=message_chat_id,
+                    text=f"Cannot reply to message with original picture: {duplicated_message_id} "
+                         f"- it was probably deleted"
+                )
+            else:
+                raise e

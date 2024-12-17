@@ -21,9 +21,9 @@ async def _send_preambulo():
             settings.TG_BOT_ESTHETIQUE_CHAT,
             'Here he comes\n\n'.upper() * 3,
         )
-        await bot.send_photo(
+        await bot.send_sticker(
             settings.TG_BOT_ESTHETIQUE_CHAT,
-            'AgACAgIAAxkBAAOhYaQ1oCTSjm_VYjqyBVY71PSC2ZkAAku4MRuyAyBJBhGEnJyL-qkBAAMCAAN4AAMiBA',
+            'CAACAgIAAxkBAAMxZ19Qhb-2HwdFJUG9UPqInQSlAh4AAiptAALex_lKCB-WzhHJlHE2BA',
         )
         await bot.send_message(
             settings.TG_BOT_ESTHETIQUE_CHAT,

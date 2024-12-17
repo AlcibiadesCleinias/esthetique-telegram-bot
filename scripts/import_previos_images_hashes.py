@@ -10,19 +10,23 @@
 # - you know a chat id. E.g. after adding bot to chat check
 #   via https://api.telegram.org/bot<UR TOKEN>/getUpdates
 #   and prepared .env accordingly.
-# - install python_dotenv==0.19.2
+# - install `python -m pip install python_dotenv==0.19.2`
+# - install `python -m pip install -r chat_history/src/requirements.txt`
+# - install: `python -m pip install -r bot/src/requirements.txt`
 #
 # Note:
 # - to run script you have to install packages from both services:
 #   chat_history and bot and you run the one from scripts/.
 # - in script there is a bunch of hacks and tricky imports order.
+# FAQ:
+# - why not to use aiogram? because bot can not access old messages of the chat.
 # todo: ask bot for password (as well: add admin to bot)
 # todo: Dockerfile for script? entrypoint?
 import sys  # noqa
 from io import BytesIO
 from datetime import datetime
 
-import aioredis
+import redis.asyncio
 from pydantic import BaseSettings
 from telethon import TelegramClient
 from dotenv import load_dotenv
@@ -55,8 +59,7 @@ class CombinedSettings(BaseSettings):
 
 
 settings = CombinedSettings()
-
-redis = aioredis.from_url(f'redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}', db=0)
+redis = redis.asyncio.from_url(f'redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}', db=0)
 client = TelegramClient(session, settings.TG_API_ID, settings.TG_API_HASH)
 
 

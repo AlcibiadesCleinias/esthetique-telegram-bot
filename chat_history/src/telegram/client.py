@@ -1,16 +1,15 @@
 from telethon import TelegramClient
-from teleredis import RedisSession  # todo: to async
+from telegram.redis_session import RedisStringSession
 from config.settings import settings
-import redis  # todo: to async
-
+import redis
 
 redis_connector = redis.Redis(  # todo: relocate
     host=settings.REDIS_HOST,
     port=settings.REDIS_PORT,
     db=0,
-    decode_responses=False,
+    decode_responses=True,
 )
-session = RedisSession(settings.TG_SESSION, redis_connector)
+session = RedisStringSession(session_id=settings.TG_SESSION, redis_connector=redis_connector)
 
 
 async def bot_init() -> TelegramClient:
