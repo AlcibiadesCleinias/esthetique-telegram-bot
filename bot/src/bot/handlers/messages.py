@@ -84,7 +84,7 @@ async def handle_esthetique_photo(message: types.Message):
                 await bot.send_message(
                     chat_id=message_chat_id,
                     text=f"Cannot reply to message with original picture: {duplicated_message_id} "
-                         f"- it was probably deleted"
+                         f"- it was probably deleted, or the message has been sent before I am joined to the chat."
                 )
             else:
                 raise e
