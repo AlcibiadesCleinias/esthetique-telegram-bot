@@ -47,6 +47,7 @@ async def cron_task(cron_expression: str, coro: Callable[..., Coroutine[Any, Any
 
 
 class CronTaskBase:
+    """Hint: To run once you can call smth like loop.run_until_complete(CronTaskBase().coro())."""
     # todo: create decorator for __call__
     def __init__(
             self,
