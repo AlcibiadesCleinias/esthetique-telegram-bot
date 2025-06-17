@@ -44,7 +44,7 @@ async def _send_preambulo():
     await random.choice([_comes, _info, _thinking])()
 
 
-async def _show_best_esthetiques(n):
+async def _show_best_esthetiques(n, is_dry_run=False):
     """Show first n best esthetiques since the date calculated with help of croniter,
     i.e. show in replays esthetique formatted messages with best stats.
     """
@@ -59,28 +59,34 @@ async def _show_best_esthetiques(n):
     )
 
     stats = await chat_history.get_esthetique_stats(start=start, end=end)
+    logger.info(f"Got {len(stats.likes_statistics)} esthetique stats: {stats}, sort them by weight for period {start} - {end}.")
     if not stats.likes_statistics:
-        logger.info(f"No statistic info comes for period: {start} - {end}")
         return
 
     sorted_indexes = np.argsort([calculate_weight(stat) for stat in stats.likes_statistics])
     sorted_indexes_first_n = sorted_indexes[len(sorted_indexes) - n:]
 
-    await _send_preambulo()
+    if not is_dry_run:
+        await _send_preambulo()
 
+    logger.info(f"Sending {len(sorted_indexes_first_n)} esthetique stats: {sorted_indexes_first_n}.")
     for position, likes_stats_idx in enumerate(sorted_indexes_first_n):
         like_stats = stats.likes_statistics[likes_stats_idx]
-        await bot.send_message(
-            settings.TG_BOT_ESTHETIQUE_CHAT,
-            f'#{len(sorted_indexes_first_n) - position}',
-            reply_to_message_id=like_stats.message_id,
-        )
+        message = f'#{len(sorted_indexes_first_n) - position}'
+        if not is_dry_run:
+            await bot.send_message(
+                settings.TG_BOT_ESTHETIQUE_CHAT,
+                message,
+                reply_to_message_id=like_stats.message_id,
+            )
+        else:
+            logger.info(f"Would send message: {message} to {like_stats.message_id}.")
 
 
 class ShowBestEsthetiquesTask(CronTaskBase):
-    def __init__(self):
+    def __init__(self, is_dry_run=False):
         super().__init__(
             settings.TG_BOT_ESTHETIQUE_STATS_CRON,
             coro=_show_best_esthetiques,
-            args=(settings.TG_BOT_ESTHETIQUE_FIRST_BESTS,),
+            args=(settings.TG_BOT_ESTHETIQUE_FIRST_BESTS, is_dry_run),
         )
