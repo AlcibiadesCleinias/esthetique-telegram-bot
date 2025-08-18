@@ -63,8 +63,13 @@ async def _show_best_esthetiques(n, is_dry_run=False):
     if not stats.likes_statistics:
         return
 
-    sorted_indexes = np.argsort([calculate_weight(stat) for stat in stats.likes_statistics])
-    sorted_indexes_first_n = sorted_indexes[len(sorted_indexes) - n:]
+    weights = [calculate_weight(stat) for stat in stats.likes_statistics]
+    sorted_indexes = np.argsort(weights)
+    # Take the top N items (highest weights come last in argsort).
+    # If n > len(sorted_indexes), take all items.
+    n_to_take = min(n, len(sorted_indexes))
+    sorted_indexes_first_n = sorted_indexes[-n_to_take:]
+    logger.debug(f"Weights: {weights}, Sorted indexes: {sorted_indexes}, Top {n_to_take}: {sorted_indexes_first_n}")
 
     if not is_dry_run:
         await _send_preambulo()
