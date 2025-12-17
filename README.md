@@ -161,3 +161,29 @@ Thus, by providing other emojis hacker could manipulate what he wants to be coun
 ### Message ids for **chat_history** and for **bot** are different
 Possible that means that chat is not in supergroup status, so, chat history is still disabled. You need to enable chat history for your chat. 
 Also Note this: https://stackoverflow.com/a/75689058
+
+# Integration Fast Test for History Service
+
+Durring the migration (from server to server) it is possible to export redis data with also stored telethon session, and after the exporting data to the new container (with help of https://gist.github.com/AlcibiadesCleinias/81e0214f7e125b8792a23bdab9d6383d), it could be helpfull to test if session is actually transfered successfully via the following script:
+
+```python
+import asyncio
+import json
+from datetime import timedelta
+from clients.telegram_chat_history import TgChatHistoryClient
+from config.settings import settings
+from utils.time import now_utc
+
+async def test():
+    end = now_utc().replace(second=0, microsecond=0)
+    start = end - timedelta(days=7)
+    client = TgChatHistoryClient(
+        chat_id=settings.TG_BOT_ESTHETIQUE_CHAT,
+        endpoint=settings.TG_CHAT_HISTORY_APP_ENDPOINT,
+    )
+    stats = await client.get_esthetique_stats(start=start, end=end)
+    print(f'✅ Записей: {len(stats.likes_statistics)}')
+    print(json.dumps(stats.dict(), indent=2, ensure_ascii=False))
+
+asyncio.run(test())
+```
